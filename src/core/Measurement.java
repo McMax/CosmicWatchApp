@@ -22,40 +22,63 @@ public class Measurement
 		this.dead_time = dead_time;
 	}
 
-	public long getTimestamp() {
+	public long getTimestamp() 
+	{
 		return timestamp;
 	}
-	public void setTimestamp(long timestamp) {
+	
+	public void setTimestamp(long timestamp) 
+	{
 		this.timestamp = timestamp;
 	}
-	public long getCount() {
+	
+	public long getCount() 
+	{
 		return count;
 	}
-	public void setCount(long count) {
+	
+	public void setCount(long count) 
+	{
 		this.count = count;
 	}
-	public long getLocal_timestamp() {
+	
+	public long getLocal_timestamp() 
+	{
 		return local_timestamp;
 	}
-	public void setLocal_timestamp(long local_timestamp) {
+	
+	public void setLocal_timestamp(long local_timestamp) 
+	{
 		this.local_timestamp = local_timestamp;
 	}
-	public short getAdc() {
+	
+	public short getAdc() 
+	{
 		return adc;
 	}
-	public void setAdc(short adc) {
+	
+	public void setAdc(short adc) 
+	{
 		this.adc = adc;
 	}
-	public double getSipm_voltage() {
+	
+	public double getSipm_voltage() 
+	{
 		return sipm_voltage;
 	}
-	public void setSipm_voltage(double sipm_voltage) {
+	
+	public void setSipm_voltage(double sipm_voltage) 
+	{
 		this.sipm_voltage = sipm_voltage;
 	}
-	public long getDead_time() {
+	
+	public long getDead_time() 
+	{
 		return dead_time;
 	}
-	public void setDead_time(long dead_time) {
+	
+	public void setDead_time(long dead_time) 
+	{
 		this.dead_time = dead_time;
 	}
 	/*
