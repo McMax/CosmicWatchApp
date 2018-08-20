@@ -64,9 +64,15 @@ public class Measurements
 		return measurements.size();
 	}
 	
-	public Measurement poll()
+	public Measurement take()
 	{
-		Measurement meas_out = measurements.poll();
+		Measurement meas_out = null;
+		try
+		{
+			meas_out = measurements.take();
+		} 
+		catch (InterruptedException e){e.printStackTrace();}
+		
 		if(measurements.isEmpty())
 			hasData = false;
 		

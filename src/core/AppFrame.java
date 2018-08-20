@@ -56,7 +56,7 @@ public class AppFrame extends JFrame implements WindowListener
 		serialreader = reader;
 		measurements = meas;
 		
-		left_panel = new JPanel(new GridLayout(6,1));
+		left_panel = new JPanel(new GridLayout(4,1));
 		control_panel = new ControlPanel();
 		control_panel.setBorder(BorderFactory.createTitledBorder("POŁĄCZENIE"));
 		left_panel.add(control_panel);
@@ -112,7 +112,6 @@ public class AppFrame extends JFrame implements WindowListener
 			add(portTextField,gbc);
 			gbc.gridwidth = 2; gbc.gridx = 0; gbc.gridy = 1; gbc.fill = GridBagConstraints.HORIZONTAL;
 			add(connectButton,gbc);
-			
 		}
 	}
 	
@@ -144,38 +143,52 @@ public class AppFrame extends JFrame implements WindowListener
 		private static final long serialVersionUID = 8553913718118843142L;
 		
 		GridBagConstraints gbc = new GridBagConstraints();
-		JLabel counts_label;
+		JLabel detector_name_label, uptime_label, counts_label;
 		JLabel average_counts_label, five_min_average_counts_label, thirty_min_average_counts;
 		
 		public StatisticsPanel()
 		{
 			super(new GridBagLayout());
 			
-			gbc.gridx = 0; gbc.anchor = GridBagConstraints.LINE_START; gbc.insets = new Insets(5, 10, 5, 10);
+			gbc.gridx = 0; gbc.gridy = 0; gbc.anchor = GridBagConstraints.LINE_START; gbc.insets = new Insets(5, 10, 5, 10);
+			add(new JLabel("Nazwa detektora"),gbc);
+			
+			detector_name_label = new JLabel("<NAZWA>");
+			gbc.gridx = 1; gbc.anchor = GridBagConstraints.LINE_END;
+			add(detector_name_label,gbc);
+			
+			gbc.gridx = 0; gbc.gridy = 1; gbc.anchor = GridBagConstraints.LINE_START;
+			add(new JLabel("Czas pomiaru"),gbc);
+			
+			uptime_label = new JLabel("<CZAS>");
+			gbc.gridx = 1; gbc.anchor = GridBagConstraints.LINE_END;
+			add(uptime_label,gbc);
+			
+			gbc.gridx = 0; gbc.gridy = 2; gbc.anchor = GridBagConstraints.LINE_START;
 			add(new JLabel("Liczba zliczeń "), gbc);
 			
 			counts_label = new JLabel("<LICZBA>");
 			gbc.gridx = 1; gbc.anchor = GridBagConstraints.LINE_END;
 			add(counts_label, gbc);
 			
-			gbc.gridwidth = 2; gbc.gridx = 0; gbc.gridy = 1; gbc.anchor = GridBagConstraints.CENTER;
+			gbc.gridwidth = 2; gbc.gridx = 0; gbc.gridy = 3; gbc.anchor = GridBagConstraints.CENTER;
 			add(new JLabel("ŚREDNIA LICZBA ZLICZEŃ"), gbc);
 
-			gbc.gridwidth = 1; gbc.gridx = 0; gbc.gridy = 2; gbc.anchor = GridBagConstraints.LINE_START;
+			gbc.gridwidth = 1; gbc.gridx = 0; gbc.gridy = 4; gbc.anchor = GridBagConstraints.LINE_START;
 			add(new JLabel("Wszystkie zliczenia"), gbc);
 			
 			average_counts_label = new JLabel("<LICZBA>");
 			gbc.gridx = 1; gbc.anchor = GridBagConstraints.LINE_END;
 			add(average_counts_label, gbc);
 			
-			gbc.gridx = 0; gbc.gridy = 3; gbc.anchor = GridBagConstraints.LINE_START;
+			gbc.gridx = 0; gbc.gridy = 5; gbc.anchor = GridBagConstraints.LINE_START;
 			add(new JLabel("Ostatnie 5 minut"), gbc);
 			
 			five_min_average_counts_label = new JLabel("<LICZBA>");
 			gbc.gridx = 1; gbc.anchor = GridBagConstraints.LINE_END;
 			add(five_min_average_counts_label, gbc);
 			
-			gbc.gridx = 0; gbc.gridy = 4; gbc.anchor = GridBagConstraints.LINE_START;
+			gbc.gridx = 0; gbc.gridy = 6; gbc.anchor = GridBagConstraints.LINE_START;
 			add(new JLabel("Ostatnie 30 minut"), gbc);
 			
 			thirty_min_average_counts = new JLabel("<LICZBA>");
@@ -202,6 +215,10 @@ public class AppFrame extends JFrame implements WindowListener
 					connectButton.setText("Rozłącz");
 					connectButton.addActionListener(new DisconnectAction());
 					connectButton.removeActionListener(ConnectAction.this);
+					
+					//Making changes in file saving section impossible
+					chooseFileButton.setEnabled(false);
+					save_checkbox.setEnabled(false);
 				}
 			} 
 			catch (Exception e1) {e1.printStackTrace();}
@@ -222,6 +239,10 @@ public class AppFrame extends JFrame implements WindowListener
 				connectButton.setText("Połącz");
 				connectButton.addActionListener(new ConnectAction());
 				connectButton.removeActionListener(DisconnectAction.this);
+				
+				//Making changes in file saving section possible again
+				chooseFileButton.setEnabled(true);
+				save_checkbox.setEnabled(true);
 			}
 		}
 	}

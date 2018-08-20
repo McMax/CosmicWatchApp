@@ -176,7 +176,7 @@ public class PlotsPanel extends JPanel implements Runnable
 		new_measurements = new Measurement[new_measurements_count];
 		
 		for(int i=0; i<new_measurements_count; ++i)
-			new_measurements[i] = measurements.poll();
+			new_measurements[i] = measurements.take();
 		
 		return new_measurements;
 	}
