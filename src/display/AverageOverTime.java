@@ -13,7 +13,6 @@ public class AverageOverTime extends TimeSeriesCollection
 
 	TimeSeries series_average;
 	int measurements_count;
-	long timestamp_start;
 	
 	public AverageOverTime()
 	{
@@ -24,28 +23,23 @@ public class AverageOverTime extends TimeSeriesCollection
 		this.addSeries(series_average);
 	}
 	
-	protected void setTimeStampStart(long timestamp)
-	{
-		timestamp_start = timestamp;
-	}
-	
 	protected void addNewMeasurement(long last_timestamp, int count)
 	{
 		measurements_count+=count;
-		if(last_timestamp > timestamp_start)
-			series_average.add(new Second(Calendar.getInstance().getTime()), (double)measurements_count/(last_timestamp - timestamp_start)*1000);
+		series_average.add(new Second(Calendar.getInstance().getTime()), (double)measurements_count/last_timestamp*1000);
 	}
 
 	public void addNewZeroMeasurement()
 	{
 		Second currentSecond = new Second(Calendar.getInstance().getTime());
-		series_average.add(currentSecond, (double)measurements_count/(currentSecond.getMiddleMillisecond() - timestamp_start)*1000);
+		long lastMeasurementSecond = series_average.getTimePeriod(getSeriesCount()-1).getMiddleMillisecond();
+		
+		series_average.add(currentSecond, (double)measurements_count/(currentSecond.getMiddleMillisecond() - lastMeasurementSecond)*1000);
 	}
 	
 	public void clean()
 	{
 		series_average.clear();
 		measurements_count = 0;
-		timestamp_start = 0;
 	}
 }

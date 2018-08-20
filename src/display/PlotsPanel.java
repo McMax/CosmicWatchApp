@@ -144,10 +144,7 @@ public class PlotsPanel extends JPanel implements Runnable
 				new_measurements = getNewMeasurements();
 				
 				if((last_measurement_time == -1) && (new_measurements_count != 0))	//first measurement
-				{
 					taking_data = true;
-					dataset_average_over_time.setTimeStampStart(new_measurements[0].getTimestamp());
-				}
 				
 				if(new_measurements_count != 0)
 					AppFrame.getMeas_table_panel().addMeasurements(new_measurements, new_measurements_count);
@@ -248,7 +245,7 @@ public class PlotsPanel extends JPanel implements Runnable
 		if(new_measurements_count == 0)
 			dataset_average_over_time.addNewZeroMeasurement();
 		else
-			dataset_average_over_time.addNewMeasurement(new_measurements[new_measurements_count-1].getTimestamp(),new_measurements_count);
+			dataset_average_over_time.addNewMeasurement(new_measurements[new_measurements_count-1].getLocal_timestamp(),new_measurements_count);
 	}
 	
 	private void updateAmplitude()
