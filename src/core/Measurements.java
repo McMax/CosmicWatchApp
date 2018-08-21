@@ -3,7 +3,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 public class Measurements
 {
-	ArrayBlockingQueue<Measurement> measurements = new ArrayBlockingQueue<Measurement>(100);
+	ArrayBlockingQueue<Measurement> measurements = new ArrayBlockingQueue<Measurement>(25);
 	Measurement last_measurement = null;
 	public boolean hasData;
 	
