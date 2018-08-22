@@ -58,7 +58,7 @@ public class PlotsPanel extends JPanel implements Runnable
 
 		//Upper panel
 		dataset_signals_in_time = new SignalsInTime();
-		chart_signals_in_time = ChartFactory.createTimeSeriesChart("Liczba zliczeń rejestrowanych na każdą sekundę", "Czas", "Zliczenia", dataset_signals_in_time, true, true, false);
+		chart_signals_in_time = ChartFactory.createTimeSeriesChart("Liczba zliczeń rejestrowanych na każdą sekundę", "Czas", "Zliczenia", dataset_signals_in_time, false, true, false);
 		chartpanel_signals_in_time = new ChartPanel(chart_signals_in_time);
 		chartpanel_signals_in_time.setPreferredSize(new Dimension(800, 300));
 		chartpanel_signals_in_time.setBorder(BorderFactory.createEmptyBorder(10,10,5,10));
@@ -68,21 +68,21 @@ public class PlotsPanel extends JPanel implements Runnable
 		//Lower panel
 		//Upper left sub-panel
 		dataset_signals_per_sample = new SignalsPerSample("Liczba zliczeń na interwał");
-		chart_signals_per_sample = ChartFactory.createHistogram("Liczba zliczeń na interwał", "Zliczenia na interwał", "Liczba wystąpień", dataset_signals_per_sample, PlotOrientation.VERTICAL, true, true, false);
+		chart_signals_per_sample = ChartFactory.createHistogram("Liczba zliczeń na interwał", "Zliczenia na interwał", "Liczba wystąpień", dataset_signals_per_sample, PlotOrientation.VERTICAL, false, true, false);
 		modifyChartLook(chart_signals_per_sample);
         
         //Upper right sub-panel
         dataset_signal_intervals = new SignalIntervals("Czas przerw pomiędzy zliczeniami");
-        chart_signal_intervals = ChartFactory.createHistogram("Czas przerw pomiędzy zliczeniami", "Czas przerw pomiędzy zliczeniami (s)", "Liczba wystąpień", dataset_signal_intervals, PlotOrientation.VERTICAL, true, true, false);
+        chart_signal_intervals = ChartFactory.createHistogram("Czas przerw pomiędzy zliczeniami", "Czas przerw pomiędzy zliczeniami (s)", "Liczba wystąpień", dataset_signal_intervals, PlotOrientation.VERTICAL, false, true, false);
         modifyChartLook(chart_signal_intervals);
         
         //Lower left sub-panel
         dataset_average_over_time = new AverageOverTime();
-        chart_average = ChartFactory.createTimeSeriesChart("Średnia liczba zliczeń w czasie", "Czas", "Średnia", dataset_average_over_time, true, true, false);
+        chart_average = ChartFactory.createTimeSeriesChart("Średnia liczba zliczeń w czasie", "Czas", "Średnia", dataset_average_over_time, false, true, false);
         
         //Lower right sub-panel
         dataset_amplitude = new Amplitude("Amplituda sygnału");
-		chart_amplitude = ChartFactory.createHistogram("Amplituda sygnału", "Amplituda (mV)", "Liczba zliczeń", dataset_amplitude, PlotOrientation.VERTICAL, true, true, false);
+		chart_amplitude = ChartFactory.createHistogram("Amplituda sygnału", "Amplituda (mV)", "Liczba zliczeń", dataset_amplitude, PlotOrientation.VERTICAL, false, true, false);
 		
 		//Creation of panel with four smaller charts
 		four_charts = new JPanel(new GridLayout(2, 2));
