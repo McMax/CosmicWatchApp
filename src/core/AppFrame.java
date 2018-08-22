@@ -20,8 +20,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+
+import com.sun.xml.internal.bind.v2.runtime.reflect.opt.MethodAccessor_Short;
+
 import display.MeasTablePanel;
 import display.PlotsPanel;
+import display.StatisticsPanel;
 
 public class AppFrame extends JFrame implements WindowListener
 {
@@ -71,7 +75,7 @@ public class AppFrame extends JFrame implements WindowListener
 
 		tabbed_pane = new JTabbedPane();
 		meas_table_panel = new MeasTablePanel(measurements);
-		plots_panel = new PlotsPanel(measurements, this);
+		plots_panel = new PlotsPanel(measurements, this, StatisticsPanel.getMeas_statistics());
 		tabbed_pane.addTab("Wykresy", plots_panel);
 		tabbed_pane.addTab("Pomiary", meas_table_panel);
 		this.getContentPane().add(tabbed_pane,BorderLayout.CENTER);
@@ -138,64 +142,7 @@ public class AppFrame extends JFrame implements WindowListener
 		}
 	}
 	
-	class StatisticsPanel extends JPanel
-	{
-		private static final long serialVersionUID = 8553913718118843142L;
-		
-		GridBagConstraints gbc = new GridBagConstraints();
-		JLabel detector_name_label, uptime_label, counts_label;
-		JLabel average_counts_label, five_min_average_counts_label, thirty_min_average_counts;
-		
-		public StatisticsPanel()
-		{
-			super(new GridBagLayout());
-			
-			gbc.gridx = 0; gbc.gridy = 0; gbc.anchor = GridBagConstraints.LINE_START; gbc.insets = new Insets(5, 10, 5, 10);
-			add(new JLabel("Nazwa detektora"),gbc);
-			
-			detector_name_label = new JLabel("<NAZWA>");
-			gbc.gridx = 1; gbc.anchor = GridBagConstraints.LINE_END;
-			add(detector_name_label,gbc);
-			
-			gbc.gridx = 0; gbc.gridy = 1; gbc.anchor = GridBagConstraints.LINE_START;
-			add(new JLabel("Czas pomiaru"),gbc);
-			
-			uptime_label = new JLabel("<CZAS>");
-			gbc.gridx = 1; gbc.anchor = GridBagConstraints.LINE_END;
-			add(uptime_label,gbc);
-			
-			gbc.gridx = 0; gbc.gridy = 2; gbc.anchor = GridBagConstraints.LINE_START;
-			add(new JLabel("Liczba zliczeń "), gbc);
-			
-			counts_label = new JLabel("<LICZBA>");
-			gbc.gridx = 1; gbc.anchor = GridBagConstraints.LINE_END;
-			add(counts_label, gbc);
-			
-			gbc.gridwidth = 2; gbc.gridx = 0; gbc.gridy = 3; gbc.anchor = GridBagConstraints.CENTER;
-			add(new JLabel("ŚREDNIA LICZBA ZLICZEŃ"), gbc);
-
-			gbc.gridwidth = 1; gbc.gridx = 0; gbc.gridy = 4; gbc.anchor = GridBagConstraints.LINE_START;
-			add(new JLabel("Wszystkie zliczenia"), gbc);
-			
-			average_counts_label = new JLabel("<LICZBA>");
-			gbc.gridx = 1; gbc.anchor = GridBagConstraints.LINE_END;
-			add(average_counts_label, gbc);
-			
-			gbc.gridx = 0; gbc.gridy = 5; gbc.anchor = GridBagConstraints.LINE_START;
-			add(new JLabel("Ostatnie 5 minut"), gbc);
-			
-			five_min_average_counts_label = new JLabel("<LICZBA>");
-			gbc.gridx = 1; gbc.anchor = GridBagConstraints.LINE_END;
-			add(five_min_average_counts_label, gbc);
-			
-			gbc.gridx = 0; gbc.gridy = 6; gbc.anchor = GridBagConstraints.LINE_START;
-			add(new JLabel("Ostatnie 30 minut"), gbc);
-			
-			thirty_min_average_counts = new JLabel("<LICZBA>");
-			gbc.gridx = 1; gbc.anchor = GridBagConstraints.LINE_END;
-			add(thirty_min_average_counts, gbc);
-		}
-	}
+	
 	
 	class ConnectAction extends AbstractAction
 	{

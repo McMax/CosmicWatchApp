@@ -20,6 +20,7 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.time.Second;
 
 import core.AppFrame;
+import core.MeasStatistics;
 import core.Measurement;
 import core.Measurements;
 
@@ -30,6 +31,7 @@ public class PlotsPanel extends JPanel implements Runnable
 	AppFrame parent_frame;
 	Measurements measurements;
 	Measurement new_measurements[];
+	MeasStatistics meas_statistics;
 	int new_measurements_count;
 	long last_measurement_time = -1;
 	boolean taking_data = false;
@@ -47,11 +49,12 @@ public class PlotsPanel extends JPanel implements Runnable
 	AverageOverTime dataset_average_over_time;
 	Amplitude dataset_amplitude;
 	
-	public PlotsPanel(Measurements cw_meas, AppFrame parentFrame)
+	public PlotsPanel(Measurements cw_meas, AppFrame parentFrame, MeasStatistics measStatistics)
 	{
 		setLayout(new BorderLayout());
 		measurements = cw_meas;
 		parent_frame = parentFrame;
+		meas_statistics = measStatistics;
 
 		//Upper panel
 		dataset_signals_in_time = new SignalsInTime();
@@ -144,16 +147,23 @@ public class PlotsPanel extends JPanel implements Runnable
 				new_measurements = getNewMeasurements();
 				
 				if((last_measurement_time == -1) && (new_measurements_count != 0))	//first measurement
+				{
 					taking_data = true;
+					meas_statistics.setTimeStart(new_measurements[0].getTimestamp(), new_measurements[0].getLocal_timestamp()); 
+				}
 				
 				if(new_measurements_count != 0)
+				{
 					AppFrame.getMeas_table_panel().addMeasurements(new_measurements, new_measurements_count);
+					meas_statistics.addCounts(new_measurements, new_measurements_count);
+				}
 				
 				updateSignalsInTimeChart();
 				updateSignalsPerSample();
 				updateSignalIntervals();
 				updateAverageOverTime();
 				updateAmplitude();
+				meas_statistics.update();
 		
 				this.validate();
 			} 
