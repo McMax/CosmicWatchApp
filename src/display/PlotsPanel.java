@@ -58,7 +58,8 @@ public class PlotsPanel extends JPanel implements Runnable
 
 		//Upper panel
 		dataset_signals_in_time = new SignalsInTime();
-		chart_signals_in_time = ChartFactory.createTimeSeriesChart("Liczba zliczeń rejestrowanych na każdą sekundę", "Czas", "Zliczenia", dataset_signals_in_time, false, true, false);
+//		chart_signals_in_time = ChartFactory.createTimeSeriesChart("Liczba zliczeń rejestrowanych na każdą sekundę", "Czas", "Zliczenia", dataset_signals_in_time, false, true, false);
+		chart_signals_in_time = ChartFactory.createXYBarChart("Liczba zliczeń rejestrowanych na każdą sekundę", "Czas", true, "Zliczenia", dataset_signals_in_time, PlotOrientation.VERTICAL, false, true, false);
 		chartpanel_signals_in_time = new ChartPanel(chart_signals_in_time);
 		chartpanel_signals_in_time.setPreferredSize(new Dimension(800, 300));
 		chartpanel_signals_in_time.setBorder(BorderFactory.createEmptyBorder(10,10,5,10));
