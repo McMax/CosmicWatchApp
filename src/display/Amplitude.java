@@ -11,6 +11,7 @@ public class Amplitude extends SimpleHistogramDataset
 	{
 		super(key);
 		createBinAxis(300, 60);
+		setAdjustForBinSize(false);
 	}
 
 	protected void createBinAxis(double upper_limit, int nbins)

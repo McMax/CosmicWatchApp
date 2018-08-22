@@ -60,6 +60,7 @@ public class PlotsPanel extends JPanel implements Runnable
 		dataset_signals_in_time = new SignalsInTime();
 //		chart_signals_in_time = ChartFactory.createTimeSeriesChart("Liczba zliczeń rejestrowanych na każdą sekundę", "Czas", "Zliczenia", dataset_signals_in_time, false, true, false);
 		chart_signals_in_time = ChartFactory.createXYBarChart("Liczba zliczeń rejestrowanych na każdą sekundę", "Czas", true, "Zliczenia", dataset_signals_in_time, PlotOrientation.VERTICAL, false, true, false);
+		modifyTimeChartLook(chart_signals_in_time, true);
 		chartpanel_signals_in_time = new ChartPanel(chart_signals_in_time);
 		chartpanel_signals_in_time.setPreferredSize(new Dimension(800, 300));
 		chartpanel_signals_in_time.setBorder(BorderFactory.createEmptyBorder(10,10,5,10));
@@ -70,20 +71,22 @@ public class PlotsPanel extends JPanel implements Runnable
 		//Upper left sub-panel
 		dataset_signals_per_sample = new SignalsPerSample("Liczba zliczeń na interwał");
 		chart_signals_per_sample = ChartFactory.createHistogram("Liczba zliczeń na interwał", "Zliczenia na interwał", "Liczba wystąpień", dataset_signals_per_sample, PlotOrientation.VERTICAL, false, true, false);
-		modifyChartLook(chart_signals_per_sample);
+		modifyNumberChartLook(chart_signals_per_sample);
         
         //Upper right sub-panel
         dataset_signal_intervals = new SignalIntervals("Czas przerw pomiędzy zliczeniami");
         chart_signal_intervals = ChartFactory.createHistogram("Czas przerw pomiędzy zliczeniami", "Czas przerw pomiędzy zliczeniami (s)", "Liczba wystąpień", dataset_signal_intervals, PlotOrientation.VERTICAL, false, true, false);
-        modifyChartLook(chart_signal_intervals);
+        modifyNumberChartLook(chart_signal_intervals);
         
         //Lower left sub-panel
         dataset_average_over_time = new AverageOverTime();
         chart_average = ChartFactory.createTimeSeriesChart("Średnia liczba zliczeń w czasie", "Czas", "Średnia", dataset_average_over_time, false, true, false);
+        modifyTimeChartLook(chart_average, false);
         
         //Lower right sub-panel
         dataset_amplitude = new Amplitude("Amplituda sygnału");
 		chart_amplitude = ChartFactory.createHistogram("Amplituda sygnału", "Amplituda (mV)", "Liczba zliczeń", dataset_amplitude, PlotOrientation.VERTICAL, false, true, false);
+		modifyNumberChartLook(chart_amplitude);
 		
 		//Creation of panel with four smaller charts
 		four_charts = new JPanel(new GridLayout(2, 2));
@@ -268,12 +271,27 @@ public class PlotsPanel extends JPanel implements Runnable
 			dataset_amplitude.addNewObservation(new_measurements[i].getSipm_voltage());
 	}
 	
-	private void modifyChartLook(JFreeChart chart)
+	private void modifyNumberChartLook(JFreeChart chart)
 	{
-		XYPlot plot = (XYPlot) chart_signals_per_sample.getPlot();
+		XYPlot plot = (XYPlot) chart.getPlot();
         plot.setDomainZeroBaselineVisible(false);
+        plot.setDomainGridlinesVisible(true);
+        plot.setRangeGridlinesVisible(true);
         plot.getDomainAxis().setStandardTickUnits(NumberAxis.createIntegerTickUnits());
         plot.getRangeAxis().setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+        plot.setDomainGridlinePaint(Color.BLACK);
+        plot.setRangeGridlinePaint(Color.BLACK);
+	}
+	
+	private void modifyTimeChartLook(JFreeChart chart, boolean ifInteger)
+	{
+		XYPlot plot = (XYPlot) chart.getPlot();
+		plot.setDomainGridlinesVisible(true);
+		plot.setRangeGridlinesVisible(true);
+        plot.setDomainGridlinePaint(Color.BLACK);
+        plot.setRangeGridlinePaint(Color.BLACK);
+        if(ifInteger)
+        	plot.getRangeAxis().setStandardTickUnits(NumberAxis.createIntegerTickUnits());
 	}
 	
 	private void setPanelColors(int rgb)
