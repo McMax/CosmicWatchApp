@@ -23,6 +23,7 @@ import core.AppFrame;
 import core.MeasStatistics;
 import core.Measurement;
 import core.Measurements;
+import core.MyFileWriter;
 
 public class PlotsPanel extends JPanel implements Runnable
 {
@@ -38,6 +39,9 @@ public class PlotsPanel extends JPanel implements Runnable
 	Thread display_thread;
 	boolean thread_running = false;
 	
+	boolean saving_to_file = false;
+	MyFileWriter file_writer;
+	
 	JPanel four_charts;
 	
 	ChartPanel chartpanel_signals_in_time, chartpanel_signals_per_sample, chartpanel_signal_intervals, chartpanel_average, chartpanel_amplitude;
@@ -49,12 +53,13 @@ public class PlotsPanel extends JPanel implements Runnable
 	AverageOverTime dataset_average_over_time;
 	Amplitude dataset_amplitude;
 	
-	public PlotsPanel(Measurements cw_meas, AppFrame parentFrame, MeasStatistics measStatistics)
+	public PlotsPanel(Measurements cw_meas, AppFrame parentFrame, MeasStatistics measStatistics, MyFileWriter fileWriter)
 	{
 		setLayout(new BorderLayout());
 		measurements = cw_meas;
 		parent_frame = parentFrame;
 		meas_statistics = measStatistics;
+		file_writer = fileWriter;
 
 		//Upper panel
 		dataset_signals_in_time = new SignalsInTime();
@@ -121,6 +126,10 @@ public class PlotsPanel extends JPanel implements Runnable
 		display_thread = new Thread(this);
 		thread_running = true;
 		display_thread.start();
+		
+		saving_to_file = parent_frame.isSavingToFile();
+		if(saving_to_file)
+			file_writer.Open();
 	}
 	
 	public void stopDisplaying()
@@ -160,6 +169,8 @@ public class PlotsPanel extends JPanel implements Runnable
 				{
 					AppFrame.getMeas_table_panel().addMeasurements(new_measurements, new_measurements_count);
 					meas_statistics.addCounts(new_measurements, new_measurements_count);
+					if(saving_to_file)
+						file_writer.Write(new_measurements, new_measurements_count);
 				}
 				
 				updateSignalsInTimeChart();
@@ -176,6 +187,7 @@ public class PlotsPanel extends JPanel implements Runnable
 				e.printStackTrace();
 				thread_running = false;
 				stopDisplaying();
+				file_writer.Close();
 			}
 		}
 	}

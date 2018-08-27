@@ -125,7 +125,7 @@ public class MyReader implements Runnable
         	catch ( IOException e )
         	{
         		e.printStackTrace();
-        		System.exit(-1);
+//        		System.exit(-1);
         	}
         }
         

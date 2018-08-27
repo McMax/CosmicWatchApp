@@ -9,11 +9,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.File;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -30,6 +32,7 @@ public class AppFrame extends JFrame implements WindowListener
 
 	static PlotsPanel plots_panel;
 	static MeasTablePanel meas_table_panel;
+	static MyFileWriter file_writer;
 	ControlPanel control_panel;
 	SavePanel save_panel;
 	StatisticsPanel statistics_panel;
@@ -44,7 +47,6 @@ public class AppFrame extends JFrame implements WindowListener
 	JLabel filename_label;
 	JTabbedPane tabbed_pane;
 	
-	
 	public AppFrame(Measurements meas, MyReader reader) throws HeadlessException
 	{
 		super();
@@ -56,6 +58,7 @@ public class AppFrame extends JFrame implements WindowListener
 		
 		serialreader = reader;
 		measurements = meas;
+		file_writer = new MyFileWriter();
 		
 		left_panel = new JPanel(new GridLayout(4,1));
 		control_panel = new ControlPanel();
@@ -72,7 +75,7 @@ public class AppFrame extends JFrame implements WindowListener
 
 		tabbed_pane = new JTabbedPane();
 		meas_table_panel = new MeasTablePanel(measurements);
-		plots_panel = new PlotsPanel(measurements, this, StatisticsPanel.getMeas_statistics());
+		plots_panel = new PlotsPanel(measurements, this, StatisticsPanel.getMeas_statistics(), file_writer);
 		tabbed_pane.addTab("Wykresy", plots_panel);
 		tabbed_pane.addTab("Pomiary", meas_table_panel);
 		this.getContentPane().add(tabbed_pane,BorderLayout.CENTER);
@@ -125,6 +128,7 @@ public class AppFrame extends JFrame implements WindowListener
 		{
 			super(new GridBagLayout());
 			chooseFileButton = new JButton("Wybierz plik");
+			chooseFileButton.addActionListener(new SaveAction());
 			
 			save_checkbox = new JCheckBox("Zapis", false);
 			
@@ -138,8 +142,6 @@ public class AppFrame extends JFrame implements WindowListener
 			add(filename_label,gbc);
 		}
 	}
-	
-	
 	
 	class ConnectAction extends AbstractAction
 	{
@@ -191,9 +193,30 @@ public class AppFrame extends JFrame implements WindowListener
 		}
 	}
 	
+	class SaveAction extends AbstractAction
+	{
+		private static final long serialVersionUID = -5244765271097285014L;
+
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			JFileChooser file_chooser = new JFileChooser();
+			File file_to_save;
+			
+			if(file_chooser.showSaveDialog(AppFrame.this) == JFileChooser.APPROVE_OPTION)
+			{
+				file_to_save = file_chooser.getSelectedFile();
+				file_writer.setFile_to_save(file_to_save);
+				filename_label.setText(file_to_save.getName());
+				save_checkbox.setSelected(true);
+			}
+		}
+	}
+	
 	void closeApp()
 	{
 		serialreader.disconnect();
+		file_writer.Close();
 		plots_panel.stopDisplaying();
 		measurements.clean();
 	}
@@ -209,7 +232,12 @@ public class AppFrame extends JFrame implements WindowListener
 	{
 		return meas_table_panel;
 	}
-
+	
+	public boolean isSavingToFile()
+	{
+		return save_checkbox.isSelected();
+	}
+	
 	@Override
 	public void windowOpened(WindowEvent e) {
 		// TODO Auto-generated method stub
