@@ -1,6 +1,7 @@
 package core;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -36,6 +37,7 @@ public class AppFrame extends JFrame implements WindowListener
 	ControlPanel control_panel;
 	SavePanel save_panel;
 	StatisticsPanel statistics_panel;
+	AboutPanel about_panel;
 	JPanel left_panel;
 	MyReader serialreader;
 	Measurements measurements;
@@ -70,6 +72,9 @@ public class AppFrame extends JFrame implements WindowListener
 		statistics_panel = new StatisticsPanel();
 		statistics_panel.setBorder(BorderFactory.createTitledBorder("STATYSTYKI"));
 		left_panel.add(statistics_panel);
+		about_panel = new AboutPanel();
+		about_panel.setBorder(BorderFactory.createTitledBorder("INFORMACJE"));
+		left_panel.add(about_panel);
 		
 		this.getContentPane().add(left_panel,BorderLayout.WEST);
 
@@ -141,6 +146,31 @@ public class AppFrame extends JFrame implements WindowListener
 			gbc.gridwidth = 2; gbc.gridx = 0; gbc.gridy = 1; gbc.fill = GridBagConstraints.HORIZONTAL;
 			add(filename_label,gbc);
 		}
+	}
+	
+	class AboutPanel extends JPanel
+	{
+		private static final long serialVersionUID = 7169615757193973199L;
+		
+		JButton about_button;
+		
+		public AboutPanel()
+		{
+			super(new FlowLayout());
+			
+			about_button = new JButton("O aplikacji");
+			about_button.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) 
+				{
+					new AboutDialog(AppFrame.this);
+				}
+			});
+			
+			add(about_button);
+		}
+		
 	}
 	
 	class ConnectAction extends AbstractAction
