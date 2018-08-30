@@ -52,7 +52,7 @@ public class AppFrame extends JFrame implements WindowListener
 	public AppFrame(Measurements meas, MyReader reader) throws HeadlessException
 	{
 		super();
-		setTitle("CosmicWatch");
+		setTitle("CosmicWatch v1.0");
 		setSize(1000,900);
 		setLocation(400, 50);
 		setLayout(new BorderLayout());
