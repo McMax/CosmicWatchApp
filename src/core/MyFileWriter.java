@@ -24,6 +24,10 @@ public class MyFileWriter
 	
 	public void Open()
 	{
+		if(file_to_save==null)
+		{
+			SuggestFileName();
+		}
 		try
 		{
 			file_to_save.createNewFile();
@@ -62,5 +66,19 @@ public class MyFileWriter
 
 	public void setFile_to_save(File file_to_save) {
 		this.file_to_save = file_to_save;
+	}
+
+	public String SuggestFileName() 
+	{
+		int i = 0;
+		String suggested_file_name;
+		do
+		{
+			suggested_file_name = String.format("Pomiary_%03d.txt", i++);
+			file_to_save = new File(suggested_file_name);
+		}
+		while(file_to_save.exists());
+		
+		return suggested_file_name;
 	}
 }

@@ -19,6 +19,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
@@ -52,7 +53,7 @@ public class AppFrame extends JFrame implements WindowListener
 	public AppFrame(Measurements meas, MyReader reader) throws HeadlessException
 	{
 		super();
-		setTitle("CosmicWatch v1.0");
+		setTitle("CosmicWatch");
 		setSize(1000,900);
 		setLocation(400, 50);
 		setLayout(new BorderLayout());
@@ -136,6 +137,7 @@ public class AppFrame extends JFrame implements WindowListener
 			chooseFileButton.addActionListener(new SaveAction());
 			
 			save_checkbox = new JCheckBox("Zapis", false);
+			save_checkbox.addActionListener(new SaveAction());
 			
 			filename_label = new JLabel("Nazwa pliku");
 			
@@ -230,15 +232,41 @@ public class AppFrame extends JFrame implements WindowListener
 		@Override
 		public void actionPerformed(ActionEvent e)
 		{
-			JFileChooser file_chooser = new JFileChooser();
-			File file_to_save;
-			
-			if(file_chooser.showSaveDialog(AppFrame.this) == JFileChooser.APPROVE_OPTION)
+			if(e.getSource()==chooseFileButton)
 			{
-				file_to_save = file_chooser.getSelectedFile();
-				file_writer.setFile_to_save(file_to_save);
-				filename_label.setText(file_to_save.getName());
-				save_checkbox.setSelected(true);
+				JFileChooser file_chooser = new JFileChooser();
+				File file_to_save;
+
+				while(true)		//Stupid solution, but works when user clicks "No" in confirm dialog
+				{
+					if(file_chooser.showSaveDialog(AppFrame.this) == JFileChooser.APPROVE_OPTION)
+					{
+						file_to_save = file_chooser.getSelectedFile();
+
+						if(file_to_save.exists())
+						{
+							int choosen_option = JOptionPane.showConfirmDialog(AppFrame.this, "Wybrany plik istnieje. Czy nadpisać?");
+
+							if(choosen_option == JOptionPane.YES_OPTION) {}
+							else if(choosen_option == JOptionPane.NO_OPTION)
+								continue;
+							else if(choosen_option == JOptionPane.CANCEL_OPTION)
+								return;
+							else
+								return;
+						}
+
+						file_writer.setFile_to_save(file_to_save);
+						filename_label.setText(file_to_save.getName());
+						save_checkbox.setSelected(true);
+						break;
+					}
+				}
+			}
+			else if(e.getSource()==save_checkbox)
+			{
+				if(filename_label.getText().equals("Nazwa pliku"))
+					filename_label.setText(file_writer.SuggestFileName());
 			}
 		}
 	}
