@@ -23,14 +23,14 @@ public class StatisticsPanel extends JPanel
 	{
 		super(new GridBagLayout());
 		
-		gbc.gridx = 0; gbc.gridy = 0; gbc.anchor = GridBagConstraints.LINE_START; gbc.insets = new Insets(5, 10, 5, 10);
+		/*gbc.gridx = 0; gbc.gridy = 0; gbc.anchor = GridBagConstraints.LINE_START;
 		add(new JLabel("Nazwa detektora"),gbc);
 		
 		detector_name_label = new JLabel("<NAZWA>");
 		gbc.gridx = 1; gbc.anchor = GridBagConstraints.LINE_END;
-		add(detector_name_label,gbc);
+		add(detector_name_label,gbc);*/
 		
-		gbc.gridx = 0; gbc.gridy = 1; gbc.anchor = GridBagConstraints.LINE_START;
+		gbc.gridx = 0; gbc.gridy = 1; gbc.anchor = GridBagConstraints.LINE_START; gbc.insets = new Insets(5, 10, 5, 10);
 		add(new JLabel("Czas pomiaru"),gbc);
 		
 		uptime_label = new JLabel("0:00:00:00");

@@ -5,6 +5,8 @@ import java.util.Calendar;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
+import javax.swing.JOptionPane;
+
 import gnu.io.CommPort;
 import gnu.io.CommPortIdentifier;
 import gnu.io.PortInUseException;
@@ -16,12 +18,12 @@ public class MyReader implements Runnable
 {
 	static Measurements measurements;
 	CommPortIdentifier portIdentifier;
-	CommPort commPort;
-	SerialPort serialPort;
+	static CommPort commPort;
+	static SerialPort serialPort;
 	InputStream in;
-	SerialReader serialreader;
-	boolean connected = false;
-	Thread reader_thread;
+	static SerialReader serialreader;
+	static boolean connected = false;
+	static Thread reader_thread;
 	
 	public MyReader(Measurements cw_meas)
 	{
@@ -125,6 +127,21 @@ public class MyReader implements Runnable
         	catch ( IOException e )
         	{
         		e.printStackTrace();
+        		JOptionPane.showMessageDialog(null, "Utracono połączenie z detektorem", "Błąd", JOptionPane.ERROR_MESSAGE);
+        		
+        		//Emergency disconnect
+        		serialPort.notifyOnDataAvailable(false);
+        		serialPort.removeEventListener();
+        		serialreader.clean();
+        		in = null;
+        		commPort.close();
+        		commPort = null;
+        		connected = false;
+        		try 
+        		{
+        			reader_thread.join();
+        			System.out.println("Reading stopped");
+        		} catch (InterruptedException e1) {e1.printStackTrace();}
 //        		System.exit(-1);
         	}
         }
