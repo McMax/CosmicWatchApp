@@ -271,10 +271,12 @@ public class AppFrame extends JFrame implements WindowListener
 			{
 				JFileChooser file_chooser = new JFileChooser();
 				File file_to_save;
+				int chosen_option;
 
 				while(true)		//Stupid solution, but works when user clicks "No" in confirm dialog
 				{
-					if(file_chooser.showSaveDialog(AppFrame.this) == JFileChooser.APPROVE_OPTION)
+					chosen_option = file_chooser.showSaveDialog(AppFrame.this);
+					if(chosen_option == JFileChooser.APPROVE_OPTION)
 					{
 						file_to_save = file_chooser.getSelectedFile();
 
@@ -296,6 +298,8 @@ public class AppFrame extends JFrame implements WindowListener
 						save_checkbox.setSelected(true);
 						break;
 					}
+					else
+						break;
 				}
 			}
 			else if(e.getSource()==save_checkbox)
