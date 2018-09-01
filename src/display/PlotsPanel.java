@@ -129,7 +129,7 @@ public class PlotsPanel extends JPanel implements Runnable
 		
 		saving_to_file = parent_frame.isSavingToFile();
 		if(saving_to_file)
-			file_writer.Open();
+			file_writer.Open(parent_frame.isEndlineFormatWin(), parent_frame.isDateFormatHR());
 	}
 	
 	public void stopDisplaying()

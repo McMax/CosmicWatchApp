@@ -86,14 +86,14 @@ public class Measurement
 		this.dead_time = dead_time;
 	}
 	
-	public String convertToString(boolean human_readable_date)
+	public String convertToString(boolean human_readable_date, String chosen_endline)
 	{
 		if(human_readable_date)
 		{
-			return String.format("%s\t%d\t%d\t%d\t%f\t%d\n", hrdate.format(new Date(timestamp)), count, local_timestamp, adc, sipm_voltage, dead_time);
+			return String.format("%s\t%d\t%d\t%d\t%f\t%d%s", hrdate.format(new Date(timestamp)), count, local_timestamp, adc, sipm_voltage, dead_time, chosen_endline);
 		}
 		else
-			return String.format("%d\t%d\t%d\t%d\t%f\t%d\n", timestamp, count, local_timestamp, adc, sipm_voltage, dead_time);
+			return String.format("%d\t%d\t%d\t%d\t%f\t%d%s", timestamp, count, local_timestamp, adc, sipm_voltage, dead_time, chosen_endline);
 	}
 	/*
 	public float getTempC() {

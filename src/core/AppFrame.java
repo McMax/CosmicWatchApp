@@ -14,6 +14,7 @@ import java.io.File;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
@@ -21,6 +22,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
@@ -47,6 +49,7 @@ public class AppFrame extends JFrame implements WindowListener
 	JButton connectButton, discoverPortsButton, chooseFileButton;
 	protected JTextField portTextField;
 	JCheckBox save_checkbox;
+	JRadioButton unix_endline_rb, win_endline_rb, unix_date_rb, hr_date_rb;
 	JLabel filename_label;
 	JTabbedPane tabbed_pane;
 	
@@ -147,6 +150,34 @@ public class AppFrame extends JFrame implements WindowListener
 			add(save_checkbox, gbc);
 			gbc.gridwidth = 2; gbc.gridx = 0; gbc.gridy = 1; gbc.fill = GridBagConstraints.HORIZONTAL;
 			add(filename_label,gbc);
+			gbc.gridy = 2; gbc.anchor = GridBagConstraints.CENTER; gbc.fill = GridBagConstraints.NONE;
+			add(new JLabel("OPCJE ZAPISU"),gbc);
+			gbc.gridwidth = 1; gbc.gridy = 3; gbc.anchor = GridBagConstraints.LINE_START; gbc.fill = GridBagConstraints.NONE; gbc.insets = new java.awt.Insets(0,0,0,0);
+			add(new JLabel("Koniec linii"),gbc);
+			gbc.gridx = 1; gbc.anchor = GridBagConstraints.LINE_END;
+			add(new JLabel("Format daty"),gbc);
+			
+			ButtonGroup button_group1 = new ButtonGroup();
+			ButtonGroup button_group2 = new ButtonGroup();
+			
+			unix_endline_rb = new JRadioButton("Unix (\\n)", false);
+			win_endline_rb = new JRadioButton("Win (\\r\\n)", true);
+			unix_date_rb = new JRadioButton("Unix", true);
+			hr_date_rb = new JRadioButton("Naturalny", false);
+			
+			button_group1.add(unix_endline_rb);
+			button_group1.add(win_endline_rb);
+			button_group2.add(unix_date_rb);
+			button_group2.add(hr_date_rb);
+			
+			gbc.gridx = 0; gbc.gridy = 4; gbc.anchor = GridBagConstraints.LINE_START;
+			add(unix_endline_rb,gbc);
+			gbc.gridx = 1;
+			add(unix_date_rb,gbc);
+			gbc.gridx = 0; gbc.gridy = 5; gbc.anchor = GridBagConstraints.LINE_START;
+			add(win_endline_rb,gbc);
+			gbc.gridx = 1;
+			add(hr_date_rb,gbc);
 		}
 	}
 	
@@ -300,9 +331,18 @@ public class AppFrame extends JFrame implements WindowListener
 		return save_checkbox.isSelected();
 	}
 	
+	public boolean isEndlineFormatWin()	//return true if Windows format, return false if UNIX format
+	{
+		return win_endline_rb.isSelected();
+	}
+	
+	public boolean isDateFormatHR()	//return true if human-readable format, return false if UNIX
+	{
+		return hr_date_rb.isSelected();
+	}
+	
 	@Override
 	public void windowOpened(WindowEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
@@ -315,31 +355,26 @@ public class AppFrame extends JFrame implements WindowListener
 
 	@Override
 	public void windowClosed(WindowEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void windowIconified(WindowEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void windowDeiconified(WindowEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void windowActivated(WindowEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void windowDeactivated(WindowEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 }
