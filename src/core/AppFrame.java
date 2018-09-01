@@ -194,6 +194,10 @@ public class AppFrame extends JFrame implements WindowListener
 					connectButton.addActionListener(new DisconnectAction());
 					connectButton.removeActionListener(ConnectAction.this);
 					
+					//Removing contents of measurements table and resetting statistics
+					meas_table_panel.cleanTable();
+					statistics_panel.resetStats();
+				
 					//Making changes in file saving section impossible
 					chooseFileButton.setEnabled(false);
 					save_checkbox.setEnabled(false);

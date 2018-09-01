@@ -43,4 +43,9 @@ public class MeasTablePanel extends JPanel
 		for(int i=0; i<size; ++i)
 			addMeasurement(meas_array[i]);
 	}
+	
+	public void cleanTable()
+	{
+		dtm.setRowCount(0);
+	}
 }
