@@ -1,0 +1,19 @@
+W repozytorium znajduje się aplikacja dostępowa w Javie do detektora CosmicWatch http://cosmicwatch.lns.mit.edu/.
+
+W katalogu src/ znajdują się źródła programu w Javie.
+W katalogu app/ znajdują się wszystkie dostępne wersje aplikacji w postaci skompilowanej.
+
+Aby uruchomić wersję skompilowaną, potrzebna jest Wirtualna Maszyna Javy (JVM), która najprawdopodobniej znajduje się na każdym komputerze. Jeśli jednak JVM nie jest zainstalowana, należy ją pobrać ze strony: https://www.java.com/pl/download/.
+
+Aplikacja jest w całości w języku polskim.
+
+---------------------------------------------------------------------
+
+Inside the repository you will find application for CosmicWatch detector http://cosmicwatch.lns.mit.edu/.
+
+Java source files are available in src/ directory.
+All pre-compiled binary versions are available in app/ directory.
+
+Java Virtual Machine (JVM) is needed for running pre-compiled version. If you do not have it installed in your computer, the most up-to-date version is available under: https://www.java.com/pl/download/.
+
+The application is in Polish only.

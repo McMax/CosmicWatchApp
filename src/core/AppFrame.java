@@ -1,6 +1,7 @@
 package core;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -9,14 +10,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.File;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
@@ -30,9 +36,11 @@ public class AppFrame extends JFrame implements WindowListener
 
 	static PlotsPanel plots_panel;
 	static MeasTablePanel meas_table_panel;
+	static MyFileWriter file_writer;
 	ControlPanel control_panel;
 	SavePanel save_panel;
 	StatisticsPanel statistics_panel;
+	AboutPanel about_panel;
 	JPanel left_panel;
 	MyReader serialreader;
 	Measurements measurements;
@@ -41,9 +49,9 @@ public class AppFrame extends JFrame implements WindowListener
 	JButton connectButton, discoverPortsButton, chooseFileButton;
 	protected JTextField portTextField;
 	JCheckBox save_checkbox;
+	JRadioButton unix_endline_rb, win_endline_rb, unix_date_rb, hr_date_rb;
 	JLabel filename_label;
 	JTabbedPane tabbed_pane;
-	
 	
 	public AppFrame(Measurements meas, MyReader reader) throws HeadlessException
 	{
@@ -56,6 +64,7 @@ public class AppFrame extends JFrame implements WindowListener
 		
 		serialreader = reader;
 		measurements = meas;
+		file_writer = new MyFileWriter();
 		
 		left_panel = new JPanel(new GridLayout(4,1));
 		control_panel = new ControlPanel();
@@ -67,12 +76,15 @@ public class AppFrame extends JFrame implements WindowListener
 		statistics_panel = new StatisticsPanel();
 		statistics_panel.setBorder(BorderFactory.createTitledBorder("STATYSTYKI"));
 		left_panel.add(statistics_panel);
+		about_panel = new AboutPanel();
+		about_panel.setBorder(BorderFactory.createTitledBorder("INFORMACJE"));
+		left_panel.add(about_panel);
 		
 		this.getContentPane().add(left_panel,BorderLayout.WEST);
 
 		tabbed_pane = new JTabbedPane();
 		meas_table_panel = new MeasTablePanel(measurements);
-		plots_panel = new PlotsPanel(measurements, this, StatisticsPanel.getMeas_statistics());
+		plots_panel = new PlotsPanel(measurements, this, StatisticsPanel.getMeas_statistics(), file_writer);
 		tabbed_pane.addTab("Wykresy", plots_panel);
 		tabbed_pane.addTab("Pomiary", meas_table_panel);
 		this.getContentPane().add(tabbed_pane,BorderLayout.CENTER);
@@ -125,8 +137,10 @@ public class AppFrame extends JFrame implements WindowListener
 		{
 			super(new GridBagLayout());
 			chooseFileButton = new JButton("Wybierz plik");
+			chooseFileButton.addActionListener(new SaveAction());
 			
 			save_checkbox = new JCheckBox("Zapis", false);
+			save_checkbox.addActionListener(new SaveAction());
 			
 			filename_label = new JLabel("Nazwa pliku");
 			
@@ -136,10 +150,61 @@ public class AppFrame extends JFrame implements WindowListener
 			add(save_checkbox, gbc);
 			gbc.gridwidth = 2; gbc.gridx = 0; gbc.gridy = 1; gbc.fill = GridBagConstraints.HORIZONTAL;
 			add(filename_label,gbc);
+			gbc.gridy = 2; gbc.anchor = GridBagConstraints.CENTER; gbc.fill = GridBagConstraints.NONE;
+			add(new JLabel("OPCJE ZAPISU"),gbc);
+			gbc.gridwidth = 1; gbc.gridy = 3; gbc.anchor = GridBagConstraints.LINE_START; gbc.fill = GridBagConstraints.NONE; gbc.insets = new java.awt.Insets(0,0,0,0);
+			add(new JLabel("Koniec linii"),gbc);
+			gbc.gridx = 1; gbc.anchor = GridBagConstraints.LINE_END;
+			add(new JLabel("Format daty"),gbc);
+			
+			ButtonGroup button_group1 = new ButtonGroup();
+			ButtonGroup button_group2 = new ButtonGroup();
+			
+			unix_endline_rb = new JRadioButton("Unix (\\n)", false);
+			win_endline_rb = new JRadioButton("Win (\\r\\n)", true);
+			unix_date_rb = new JRadioButton("Unix", true);
+			hr_date_rb = new JRadioButton("Naturalny", false);
+			
+			button_group1.add(unix_endline_rb);
+			button_group1.add(win_endline_rb);
+			button_group2.add(unix_date_rb);
+			button_group2.add(hr_date_rb);
+			
+			gbc.gridx = 0; gbc.gridy = 4; gbc.anchor = GridBagConstraints.LINE_START;
+			add(unix_endline_rb,gbc);
+			gbc.gridx = 1;
+			add(unix_date_rb,gbc);
+			gbc.gridx = 0; gbc.gridy = 5; gbc.anchor = GridBagConstraints.LINE_START;
+			add(win_endline_rb,gbc);
+			gbc.gridx = 1;
+			add(hr_date_rb,gbc);
 		}
 	}
 	
-	
+	class AboutPanel extends JPanel
+	{
+		private static final long serialVersionUID = 7169615757193973199L;
+		
+		JButton about_button;
+		
+		public AboutPanel()
+		{
+			super(new FlowLayout());
+			
+			about_button = new JButton("O aplikacji");
+			about_button.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) 
+				{
+					new AboutDialog(AppFrame.this);
+				}
+			});
+			
+			add(about_button);
+		}
+		
+	}
 	
 	class ConnectAction extends AbstractAction
 	{
@@ -160,6 +225,10 @@ public class AppFrame extends JFrame implements WindowListener
 					connectButton.addActionListener(new DisconnectAction());
 					connectButton.removeActionListener(ConnectAction.this);
 					
+					//Removing contents of measurements table and resetting statistics
+					meas_table_panel.cleanTable();
+					statistics_panel.resetStats();
+				
 					//Making changes in file saving section impossible
 					chooseFileButton.setEnabled(false);
 					save_checkbox.setEnabled(false);
@@ -191,9 +260,60 @@ public class AppFrame extends JFrame implements WindowListener
 		}
 	}
 	
+	class SaveAction extends AbstractAction
+	{
+		private static final long serialVersionUID = -5244765271097285014L;
+
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			if(e.getSource()==chooseFileButton)
+			{
+				JFileChooser file_chooser = new JFileChooser();
+				File file_to_save;
+				int chosen_option;
+
+				while(true)		//Stupid solution, but works when user clicks "No" in confirm dialog
+				{
+					chosen_option = file_chooser.showSaveDialog(AppFrame.this);
+					if(chosen_option == JFileChooser.APPROVE_OPTION)
+					{
+						file_to_save = file_chooser.getSelectedFile();
+
+						if(file_to_save.exists())
+						{
+							int choosen_option = JOptionPane.showConfirmDialog(AppFrame.this, "Wybrany plik istnieje. Czy nadpisać?");
+
+							if(choosen_option == JOptionPane.YES_OPTION) {}
+							else if(choosen_option == JOptionPane.NO_OPTION)
+								continue;
+							else if(choosen_option == JOptionPane.CANCEL_OPTION)
+								return;
+							else
+								return;
+						}
+
+						file_writer.setFile_to_save(file_to_save);
+						filename_label.setText(file_to_save.getName());
+						save_checkbox.setSelected(true);
+						break;
+					}
+					else
+						break;
+				}
+			}
+			else if(e.getSource()==save_checkbox)
+			{
+				if(filename_label.getText().equals("Nazwa pliku"))
+					filename_label.setText(file_writer.SuggestFileName());
+			}
+		}
+	}
+	
 	void closeApp()
 	{
 		serialreader.disconnect();
+		file_writer.Close();
 		plots_panel.stopDisplaying();
 		measurements.clean();
 	}
@@ -209,10 +329,24 @@ public class AppFrame extends JFrame implements WindowListener
 	{
 		return meas_table_panel;
 	}
-
+	
+	public boolean isSavingToFile()
+	{
+		return save_checkbox.isSelected();
+	}
+	
+	public boolean isEndlineFormatWin()	//return true if Windows format, return false if UNIX format
+	{
+		return win_endline_rb.isSelected();
+	}
+	
+	public boolean isDateFormatHR()	//return true if human-readable format, return false if UNIX
+	{
+		return hr_date_rb.isSelected();
+	}
+	
 	@Override
 	public void windowOpened(WindowEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
@@ -225,31 +359,26 @@ public class AppFrame extends JFrame implements WindowListener
 
 	@Override
 	public void windowClosed(WindowEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void windowIconified(WindowEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void windowDeiconified(WindowEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void windowActivated(WindowEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void windowDeactivated(WindowEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 }

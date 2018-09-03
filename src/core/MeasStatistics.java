@@ -24,13 +24,18 @@ public class MeasStatistics
 	
 	public MeasStatistics(StatisticsPanel statisticsPanel)
 	{
+		resetStatistics();
+		statistics_panel = statisticsPanel;
+	}
+	
+	public void resetStatistics()
+	{
 		signal_timestamps = new ArrayList<Long>();
 		signals_5min = new ArrayDeque<Long>();
 		signals_30min = new ArrayDeque<Long>();
 		total_signal_count = 0;
 		uptime = -1;
 		time_start = null;
-		statistics_panel = statisticsPanel;
 	}
 	
 	public void setTimeStart(long timestamp_start, long local_timestamp)

@@ -17,20 +17,20 @@ public class StatisticsPanel extends JPanel
 	
 	GridBagConstraints gbc = new GridBagConstraints();
 	JLabel detector_name_label, uptime_label, counts_label;
-	JLabel average_counts_label, five_min_average_counts_label, thirty_min_average_counts;
+	JLabel average_counts_label, five_min_average_counts_label, thirty_min_average_counts_label;
 	
 	public StatisticsPanel()
 	{
 		super(new GridBagLayout());
 		
-		gbc.gridx = 0; gbc.gridy = 0; gbc.anchor = GridBagConstraints.LINE_START; gbc.insets = new Insets(5, 10, 5, 10);
+		/*gbc.gridx = 0; gbc.gridy = 0; gbc.anchor = GridBagConstraints.LINE_START;
 		add(new JLabel("Nazwa detektora"),gbc);
 		
 		detector_name_label = new JLabel("<NAZWA>");
 		gbc.gridx = 1; gbc.anchor = GridBagConstraints.LINE_END;
-		add(detector_name_label,gbc);
+		add(detector_name_label,gbc);*/
 		
-		gbc.gridx = 0; gbc.gridy = 1; gbc.anchor = GridBagConstraints.LINE_START;
+		gbc.gridx = 0; gbc.gridy = 1; gbc.anchor = GridBagConstraints.LINE_START; gbc.insets = new Insets(5, 10, 5, 10);
 		add(new JLabel("Czas pomiaru"),gbc);
 		
 		uptime_label = new JLabel("0:00:00:00");
@@ -64,9 +64,9 @@ public class StatisticsPanel extends JPanel
 		gbc.gridx = 0; gbc.gridy = 6; gbc.anchor = GridBagConstraints.LINE_START;
 		add(new JLabel("Ostatnie 30 minut"), gbc);
 		
-		thirty_min_average_counts = new JLabel("0");
+		thirty_min_average_counts_label = new JLabel("0");
 		gbc.gridx = 1; gbc.anchor = GridBagConstraints.LINE_END;
-		add(thirty_min_average_counts, gbc);
+		add(thirty_min_average_counts_label, gbc);
 		
 		meas_statistics = new MeasStatistics(this);
 	}
@@ -74,6 +74,16 @@ public class StatisticsPanel extends JPanel
 	public static MeasStatistics getMeas_statistics()
 	{
 		return meas_statistics;
+	}
+	
+	public void resetStats()
+	{
+		meas_statistics.resetStatistics();
+		uptime_label.setText("0:00:00:00");
+		counts_label.setText("0");
+		average_counts_label.setText("0");
+		five_min_average_counts_label.setText("0");
+		thirty_min_average_counts_label.setText("0");
 	}
 
 	public void updateStatistics(long uptime, int total_signal_count, double average_total, double average_5min,
@@ -83,7 +93,7 @@ public class StatisticsPanel extends JPanel
 		counts_label.setText(String.valueOf(total_signal_count));
 		average_counts_label.setText(String.format("%4.3f", average_total*1000));
 		five_min_average_counts_label.setText(String.format("%4.3f", average_5min*1000));
-		thirty_min_average_counts.setText(String.format("%4.3f", average_30min*1000));
+		thirty_min_average_counts_label.setText(String.format("%4.3f", average_30min*1000));
 	}
 	
 	String convertUptimeDisplay(long uptime)

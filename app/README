@@ -1,0 +1,11 @@
+Aplikacja potrzebuje do działania biblioteki RXTX łączącej się z portem szeregowym. Plik z biblioteką (rxtxSerial.dll) znajduje się w paczce ZIP.
+
+Instalacja:
+- Rozpakuj plik ZIP to wybranego katalogu
+- Uruchom plik "uruchom.bat"
+
+-------------------------------------
+
+Dostępne wersje aplikacji:
+
+- v1.0.1 - Windows 64-bit

@@ -1,5 +1,8 @@
 package core;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Measurement 
 {
 	private long timestamp;
@@ -9,6 +12,7 @@ public class Measurement
 	private double sipm_voltage;
 	private long dead_time;
 //	private float tempC;	//Temperature is omitted due to parsing problems
+	SimpleDateFormat hrdate = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss.SSS");
 	
 	public Measurement(long timestamp, long count, long local_timestamp, short adc, double sipm_voltage,
 			long dead_time) 
@@ -80,6 +84,16 @@ public class Measurement
 	public void setDead_time(long dead_time) 
 	{
 		this.dead_time = dead_time;
+	}
+	
+	public String convertToString(boolean human_readable_date, String chosen_endline)
+	{
+		if(human_readable_date)
+		{
+			return String.format("%s\t%d\t%d\t%d\t%f\t%d%s", hrdate.format(new Date(timestamp)), count, local_timestamp, adc, sipm_voltage, dead_time, chosen_endline);
+		}
+		else
+			return String.format("%d\t%d\t%d\t%d\t%f\t%d%s", timestamp, count, local_timestamp, adc, sipm_voltage, dead_time, chosen_endline);
 	}
 	/*
 	public float getTempC() {
